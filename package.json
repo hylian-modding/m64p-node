@@ -1,0 +1,24 @@
+{
+  "name": "ml64-emu-addon",
+  "version": "1.0.0",
+  "description": "Mupen64Plus frontend and multimedia library for ModLoader64",
+  "private": true,
+  "scripts": {
+    "clean": "cmake-js clean",
+    "config-debug": "cmake-js configure -DCMAKE_BUILD_TYPE=Debug",
+    "config": "cmake-js configure",
+    "build-debug": "cmake-js build -DCMAKE_BUILD_TYPE=Debug && node postbuild-scripts/copy_addon_debug.js",
+    "build": "cmake-js build && node postbuild-scripts/copy_addon.js",
+    "rebuild-debug": "cmake-js rebuild -DCMAKE_BUILD_TYPE=Debug && node postbuild-scripts/copy_addon_debug.js",
+    "rebuild": "cmake-js rebuild && node postbuild-scripts/copy_addon.js",
+    "compile-debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug && node postbuild-scripts/copy_addon_debug.js",
+    "compile": "cmake-js compile && node postbuild-scripts/copy_addon.js",
+    "test": "cd test_bin && node ../js/index.js"
+  },
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "@types/node": "^14.6.2",
+    "node-addon-api": "^3.0.0"
+  }
+}

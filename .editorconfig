@@ -1,0 +1,10 @@
+root = true
+
+[{*.{cpp,hpp,c,h,inl,ts,js,gyp,cmake},CMakeLists.txt}]
+indent_style = space
+indent_size = 4
+tab_width = 4
+insert_final_newline = true
+end_of_line = crlf
+trim_trailing_whitespace = true
+charset = utf-8

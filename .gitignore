@@ -1,0 +1,7 @@
+.vscode
+build
+dist
+js
+node_modules
+src/index.ts
+test_bin
