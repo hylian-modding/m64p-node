@@ -491,7 +491,7 @@ Napi::Object BuildExports(Napi::Env env, Napi::Object exports)
     exports.Set("rdramWriteBits8", Napi::Function::New(env, RDRAMWriteBits8));
     exports.Set("rdramWriteBitsBuffer", Napi::Function::New(env, RDRAMWriteBitsBuffer));
 
-    exports.Set("derefPtr", Napi::Function::New(env, DerefPtr));
+    exports.Set("dereferencePointer", Napi::Function::New(env, DerefPtr));
     exports.Set("rdramReadPtr8", Napi::Function::New(env, RDRAMReadPtr8));
     exports.Set("rdramReadPtr16", Napi::Function::New(env, RDRAMReadPtr16));
     exports.Set("rdramReadPtr32", Napi::Function::New(env, RDRAMReadPtr32));
