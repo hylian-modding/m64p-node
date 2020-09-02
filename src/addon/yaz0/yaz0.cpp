@@ -153,10 +153,10 @@ static int Enc(u8* src, int src_size, u8* t_buf)
         ++valid_bit_count;
 
         if (valid_bit_count == 8) {
-            std::copy(&curr_code_byte, &curr_code_byte + 1, t_buf + b_offset);
+            std::memcpy(t_buf + b_offset, &curr_code_byte, 1);
             ++b_offset;
 
-            std::copy(dst, dst + r.dst_pos, t_buf + b_offset);
+            std::memcpy(t_buf + b_offset, dst, r.dst_pos);
             b_offset += r.dst_pos;
 
             dst_size += r.dst_pos + 1;
@@ -171,10 +171,10 @@ static int Enc(u8* src, int src_size, u8* t_buf)
     }
 
     if (valid_bit_count > 0) {
-        std::copy(&curr_code_byte, &curr_code_byte + 1, t_buf + b_offset);
+        std::memcpy(t_buf + b_offset, &curr_code_byte, 1);
         b_offset += 1;
 
-        std::copy(dst, dst + r.dst_pos, t_buf + b_offset);
+        std::memcpy(t_buf + b_offset, dst, r.dst_pos);
         b_offset += r.dst_pos;
 
         dst_size += r.dst_pos + 1;
@@ -201,9 +201,9 @@ Napi::Value Encode(const Napi::CallbackInfo& info)
 	static const char* header = "Yaz0";
 	u32 orig_size = SDL_Swap32(static_cast<u32>(buf_len));
 
-    std::copy(header, header + 4, y_buf.data());
-    std::copy(&orig_size, &orig_size + 4, y_buf.data() + 4);
-    std::copy(t_buf.data(), t_buf.data() + size, y_buf.data() + 16);
+    std::memcpy(y_buf.data(), header, 4);
+    std::memcpy(y_buf.data() + 4, &orig_size, 4);
+    std::memcpy(y_buf.data() + 16, t_buf.data(), size);
 
     return Napi::Buffer<u8>::Copy(info.Env(), y_buf.data(), y_buf.size());
 }
@@ -214,7 +214,7 @@ Napi::Value Decode(const Napi::CallbackInfo& info)
     auto buf_data = buf.Data();
 
     u32 size{};
-    std::copy(buf_data + 4, buf_data + 8, &size);
+    std::memcpy(&size, buf_data + 4, 4);
 	size = SDL_Swap32(size);
 
 	std::vector<u8> t_buf(size);
