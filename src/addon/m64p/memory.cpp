@@ -200,7 +200,7 @@ Napi::Value ROMWriteBuffer(const Napi::CallbackInfo& info)
 
 inline Napi::Value RDRAMReadBit8_(Napi::Env env, u32 addr, u32 offset)
 {
-    return FromBool(env, std::bitset<8>{GetCore().RDRAMRead8(addr)}.test(offset));
+    return FromBool(env, std::bitset<8>{GetCore().RDRAMRead8(addr)}.test(7 - offset));
 }
 
 Napi::Value RDRAMReadBits8_(Napi::Env env, u32 addr)
@@ -209,24 +209,21 @@ Napi::Value RDRAMReadBits8_(Napi::Env env, u32 addr)
     std::bitset<8> v = GetCore().RDRAMRead8(addr);
 
 	for (u32 j{}; j < 8; ++j)
-		buf.Set(j, v.test(j));
+		buf.Set(j, v.test(7 - j));
 
     return buf;
 }
 
 Napi::Value RDRAMReadBitsBuffer_(Napi::Env env, u32 addr, u32 len)
 {
-    auto mem = GetCore().RDRAMReadBuffer(addr, len);
     auto buf = Napi::Buffer<u8>::New(env, len * 8);
 
     for (u32 i{}; i < len; ++i) {
-		std::bitset<8> v = mem[i];
+		std::bitset<8> v = GetCore().RDRAMRead8(addr + i);
 
 		for (u32 j{}; j < 8; ++j)
-			buf.Set(i * 8 + j, v.test(j));
+			buf.Set(i * 8 + j, v.test(7 - j));
 	}
-
-    std::free(buf);
 
     return buf;
 }
@@ -234,7 +231,7 @@ Napi::Value RDRAMReadBitsBuffer_(Napi::Env env, u32 addr, u32 len)
 void RDRAMWriteBit8_(u32 addr, u32 offset, bool set)
 {
     std::bitset<8> v = GetCore().RDRAMRead8(addr);
-	v.set(offset, set);
+	v.set(7 - offset, set);
 	GetCore().RDRAMWrite8(addr, static_cast<u8>(v.to_ulong()));
 }
 
@@ -243,18 +240,18 @@ void RDRAMWriteBits8_(u32 addr, const Napi::Uint8Array& buf)
 	std::bitset<8> v;
 
 	for (u32 j{}; j < 8; ++j)
-		v.set(j, AsBool(buf.Get(j)));
+		v.set(7 - j, ToBool(buf.Get(j)));
 
 	GetCore().RDRAMWrite8(addr, static_cast<u8>(v.to_ulong()));
 }
 
 void RDRAMWriteBitsBuffer_(u32 addr, const Napi::Uint8Array& buf)
 {
-    for (u32 i{}; i < buf.ElementLength(); i += 8) {
+    for (u32 i{}; i < buf.ElementLength() / 8; ++i) {
 		std::bitset<8> v;
 
 		for (u32 j{}; j < 8; ++j)
-			v.set(j, AsBool(buf.Get(i * 8 + j)));
+			v.set(7 - j, ToBool(buf.Get(i * 8 + j)));
 
 		GetCore().RDRAMWrite8(addr + i, static_cast<u8>(v.to_ulong()));
 	}

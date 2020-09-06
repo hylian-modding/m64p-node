@@ -94,6 +94,11 @@ inline bool AsBoolOr(const Napi::Value& value, bool default_value)
     return value.IsUndefined() ? default_value : AsBool(value);
 }
 
+inline bool ToBool(const Napi::Value& value)
+{
+    return value.ToBoolean();
+}
+
 inline Napi::Value FromBool(Napi::Env env, bool value)
 {
     return Napi::Boolean::New(env, value);
