@@ -119,4 +119,9 @@ inline u64 App::GetElapsedFrameCount() const
     return m_emu.elapsed_frames;
 }
 
+inline void App::TakeNextScreenshot()
+{
+    m_take_shot = true;
+}
+
 }

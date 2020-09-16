@@ -393,6 +393,13 @@ Napi::Value CreateResourcesNextVi(const Napi::CallbackInfo& info)
     return info.Env().Undefined();
 }
 
+Napi::Value TakeNextScreenshot(const Napi::CallbackInfo& info)
+{
+    GetApp().TakeNextScreenshot();
+
+    return info.Env().Undefined();
+}
+
 Napi::Value GetMainWindow(const Napi::CallbackInfo& info)
 {
     return SDL::WindowRef::Create(info.Env(), GetApp().GetMainWindow().Get());
@@ -542,6 +549,7 @@ Napi::Object BuildExports(Napi::Env env, Napi::Object exports)
     exports.Set("captureFrame", Napi::Function::New(env, CaptureFrame));
     exports.Set("getFrameTexture", Napi::Function::New(env, GetFrameTexture));
     exports.Set("createResourcesNextVi", Napi::Function::New(env, CreateResourcesNextVi));
+    exports.Set("takeNextScreenshot", Napi::Function::New(env, TakeNextScreenshot));
     exports.Set("getMainWindow", Napi::Function::New(env, GetMainWindow));
     exports.Set("showMessageBox", Napi::Function::New(env, ShowMessageBox));
 

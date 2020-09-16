@@ -23,6 +23,7 @@
 #include <memory>
 #include <mutex>
 #include <stdexcept>
+#include <string>
 #include <vector>
 
 #include <m64p_api/m64p_types.h>
@@ -100,6 +101,7 @@ public:
     SDL::Window& GetMainWindow();
     bool HasEmuInputFocus() const;
     u64 GetElapsedFrameCount() const;
+    void TakeNextScreenshot();
 
     void Startup(const StartInfo& info);
     void Shutdown();
@@ -181,6 +183,7 @@ private:
     bool m_create_res_next{};
     std::mutex m_tex_to_destroy_mutex;
     std::vector<u32> m_tex_to_destroy;
+    bool m_take_shot{};
 
     App();
     ~App();
@@ -214,6 +217,8 @@ private:
     void DebugInitHandler();
     void DebugUpdateHandler(unsigned pc);
     void SwapHandler();
+    std::filesystem::path GetScreenshotPath();
+    void TakeScreenshot();
 };
 
 }

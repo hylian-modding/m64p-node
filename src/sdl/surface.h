@@ -33,6 +33,7 @@ public:
     int GetHeight();
     void* GetPixels();
     void ConvertFormat(SDL_PixelFormatEnum format);
+    void SavePNG(const std::filesystem::path& path);
 
 private:
     std::unique_ptr<SDL_Surface, void(*)(SDL_Surface*)> m_ptr;

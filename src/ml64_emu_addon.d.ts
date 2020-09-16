@@ -44,6 +44,7 @@ export module Frontend {
     export function captureFrame(): void;
     export function getFrameTexture(): Gfx.Texture;
     export function createResourcesNextVi(): void;
+    export function takeNextScreenshot(): void;
     export function getMainWindow(): SDL.WindowRef;
     export function showMessageBox(parent: SDL.WindowRef | undefined, icon: MessageBoxIcon,
         title: string, mainInstruction: string, content: string): void;

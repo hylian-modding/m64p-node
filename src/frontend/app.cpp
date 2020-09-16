@@ -8,7 +8,9 @@
 #include "imgui/imgui.h"
 #include "sdl/surface.h"
 
+#include <chrono>
 #include <iostream>
+#include <sstream>
 
 #include <fmt/format.h>
 #include <GL/glew.h>
@@ -643,6 +645,17 @@ void App::NewVIHandler()
         m_create_res_next = false;
     }
 
+    if (m_take_shot) {
+        m_take_shot = false;
+
+        try {
+            TakeScreenshot();
+        }
+        catch (const std::exception& e) {
+            std::cerr << "[ERROR] Failed to take screenshot: " << e.what() << std::endl;
+        }
+    }
+
     m_input.Update(m_emu.core);
     OnNewVI.fire();
 }
@@ -704,6 +717,53 @@ void App::SwapHandler()
 
     glBindTexture(GL_TEXTURE_2D, bound_tex > 0 ? bound_tex : 0);
     UpdateVideoOutputSize();
+}
+
+std::filesystem::path App::GetScreenshotPath()
+{
+    auto now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+    m64p_rom_settings settings;
+    m_emu.core.GetROMSettings(&settings);
+
+    std::ostringstream oss;
+    oss << std::put_time(std::localtime(&now), "[%Y-%m-%d %H-%M-%S]") << " (" << m_emu.elapsed_frames << ") " << settings.goodname << ".png";
+    auto filename = oss.str();
+
+    auto cache_path = m_emu.core.GetUserCachePath();
+    auto screenshot_path = std::filesystem::path{m_emu.core.ConfigOpenSection("Core").GetStringOr("ScreenshotPath", "")};
+
+    return screenshot_path.empty() ? cache_path / "screenshot" / filename : screenshot_path / filename;
+}
+
+void App::TakeScreenshot()
+{
+    auto screenshot_path = GetScreenshotPath();
+    auto parent_path = screenshot_path.parent_path();
+
+    if (!std::filesystem::exists(parent_path))
+        std::filesystem::create_directory(parent_path);
+
+    auto width = m_video.window.GetWidth();
+    auto height = m_video.window.GetHeight();
+    const std::size_t pitch = width * 4;
+    std::vector<u8> buf(width * height * 4);
+    std::vector<u8> stride(pitch);
+
+    glReadBuffer(GL_BACK);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, buf.data());
+
+    for (int i{}; i < height / 2; ++i) {
+        auto line_start = buf.data() + i * pitch;
+        auto line_end = buf.data() + (height - 1 - i) * pitch;
+
+        std::memcpy(stride.data(), line_start, pitch);
+        std::memcpy(line_start, line_end, pitch);
+        std::memcpy(line_end, stride.data(), pitch);
+    }
+
+    SDL::Surface s{buf.data(), width, height, 32, static_cast<int>(pitch), SDL_PIXELFORMAT_ABGR8888};
+    s.SavePNG(GetScreenshotPath());
 }
 
 }

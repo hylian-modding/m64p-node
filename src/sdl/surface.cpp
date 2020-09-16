@@ -104,4 +104,10 @@ void Surface::ConvertFormat(SDL_PixelFormatEnum format)
         throw Error{"SDL_ConvertSurfaceFormat"};
 }
 
+void Surface::SavePNG(const std::filesystem::path& path)
+{
+    if (IMG_SavePNG(Get(), path.string().c_str()) != 0)
+        throw Error{"IMG_SavePNG"};
+}
+
 }
