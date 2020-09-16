@@ -319,7 +319,7 @@ void App::InputConfigClosedHandler()
 
 void App::ShowUtilWindows()
 {
-    ImGui::GetIO().ConfigViewportsNoDecoration = false;
+    // ImGui::GetIO().ConfigViewportsNoDecoration = false;
 
     if (m_util_win.input_conf)
         m_util_win.input_conf->Show(m_video.window);
@@ -330,7 +330,7 @@ void App::ShowUtilWindows()
     if (m_util_win.mem_viewer)
         m_util_win.mem_viewer->Show(m_video.window, m_fonts.mono);
 
-    ImGui::GetIO().ConfigViewportsNoDecoration = true;
+    // ImGui::GetIO().ConfigViewportsNoDecoration = true;
 }
 
 void App::Startup(const StartInfo& info)

@@ -29,8 +29,8 @@ int ToolBase::GetWindowFlags(SDL::Window& main_win)
 {
     int window_flags = ImGuiWindowFlags_NoCollapse;
 
-    if (m_window != main_win.Get())
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
+    // if (m_window != main_win.Get())
+    //     window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize;
 
     return window_flags;
 }
