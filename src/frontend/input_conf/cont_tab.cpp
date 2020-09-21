@@ -431,7 +431,7 @@ void ContTab::ShowDevicesCombo()
         for (std::size_t i{}; i < m_devices.size(); ++i) {
             ImGui::PushID(static_cast<int>(i));
 
-            if (ImGui::Selectable(fmt::format("{}: {}", i, m_devices[i]).c_str())) {
+            if (ImGui::Selectable(fmt::format("{}: {}", i, m_devices[i]).c_str(), m_device_index == static_cast<int>(i))) {
                 if (i == 0)
                     m_device_index = k_kbd_device_index;
                 else
@@ -452,7 +452,7 @@ void ContTab::ShowPluginsCombo()
             if (i == 0 || i == 3)
                 continue;
 
-            if (ImGui::Selectable(k_plugin_names[i]))
+            if (ImGui::Selectable(k_plugin_names[i], m_plugin_index == static_cast<int>(i)))
                 m_plugin_index = static_cast<int>(i);
         }
 

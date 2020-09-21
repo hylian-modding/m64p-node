@@ -38,7 +38,7 @@ void View::Show(SDL::Window& main_win)
     if (!m_open)
         return;
 
-    ImGui::SetNextWindowSize({380.0f, 816.0f}, ImGuiCond_Appearing);
+    ImGui::SetNextWindowSize({380.0f, 843.0f}, ImGuiCond_Appearing);
     ImGui::Begin("Input config", &m_open, GetWindowFlags(main_win) | ImGuiWindowFlags_NoDocking);
 
     CommonBehavior();
