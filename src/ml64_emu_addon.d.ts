@@ -241,8 +241,8 @@ export module M64p {
     }
 
     export module Memory {
-        export function getRdramBuffer(): Buffer;
-        export function getRomBuffer(): Buffer;
+        export function getRdramBuffer(): ArrayBuffer;
+        export function getRomBuffer(): ArrayBuffer;
         export function invalidateCachedCode(): void;
 
         export function rdramRead8(addr: number): number;
