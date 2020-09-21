@@ -40,14 +40,52 @@ App::~App()
     m_sdl_init.sdl.Quit();
 }
 
+void App::PrintOpenGLInfo()
+{
+    SDL::GLContext context{m_video.window};
+
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Vendor: {}", glGetString(GL_VENDOR)));
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Renderer: {}", glGetString(GL_RENDERER)));
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Version: {}", glGetString(GL_VERSION)));
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Shading language version: {}", glGetString(GL_SHADING_LANGUAGE_VERSION)));
+}
+
+static inline const char* SDLGLProfileToString(int pro)
+{
+    switch (pro) {
+    case SDL_GL_CONTEXT_PROFILE_CORE:
+        return "Core";
+    case SDL_GL_CONTEXT_PROFILE_COMPATIBILITY:
+        return "Compatibility";
+    case SDL_GL_CONTEXT_PROFILE_ES:
+        return "ES";
+    default:
+        return "";
+    }
+}
+
+void App::PrintGLContextInfo()
+{
+    int maj, min, pro;
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &maj);
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &min);
+    SDL_GL_GetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, &pro);
+
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Context major version: {}", maj));
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Context minor version: {}", min));
+    Logger::Log(LogCategory::Debug, "OpenGL", fmt::format("Context profile: {}", SDLGLProfileToString(pro)));
+}
+
 void App::InitVideo(const StartInfo& info)
 {
     m_video.window = {info.window_title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, info.window_width, info.window_height,
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_HIDDEN};
 
+    PrintOpenGLInfo();
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -59,6 +97,8 @@ void App::InitVideo(const StartInfo& info)
 
     if (glewInit() != GLEW_OK)
         throw LoggedRuntimeError{"M64p frontend", "Failed to initialize GLEW"};
+
+    PrintGLContextInfo();
 
     m_video.imgui.Initialize(m_video.window, m_video.gl_context);
 
