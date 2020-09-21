@@ -1,10 +1,10 @@
 #pragma once
 
-#include <stdexcept>
+#include "common/logged_runtime_error.h"
 
 namespace SDL {
 
-struct Error : std::runtime_error {
+struct Error : LoggedRuntimeError {
 	Error();
 	Error(const char* function_name);
 };

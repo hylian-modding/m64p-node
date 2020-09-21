@@ -9,7 +9,7 @@ set_target_properties(addon PROPERTIES
 
 target_link_libraries(addon
     PUBLIC node::cmake-js node::node-addon-api
-    PRIVATE common frontend imgui m64p)
+    PRIVATE common frontend imgui m64p fmt::fmt)
 
 if(WIN32)
 	target_compile_definitions(addon PRIVATE _CRT_SECURE_NO_WARNINGS)

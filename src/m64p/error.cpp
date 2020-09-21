@@ -25,11 +25,11 @@ static std::array<const char*, 15> k_ErrorMessages {
 };
 
 Error::Error(m64p_error error_code) :
-	std::runtime_error{std::string{"mupen64plus core error: "} + GetCoreErrorMessage(error_code)}
+	LoggedRuntimeError{"M64p", GetCoreErrorMessage(error_code)}
 {}
 
 Error::Error(const char* function_name, m64p_error error_code) :
-	std::runtime_error{fmt::format("mupen64plus core error: {}: {}", function_name, GetCoreErrorMessage(error_code))}
+	LoggedRuntimeError{"M64p", fmt::format("{}: {}", function_name, GetCoreErrorMessage(error_code))}
 {}
 
 const char* Error::GetCoreErrorMessage(m64p_error error_code)

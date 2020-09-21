@@ -1,4 +1,5 @@
 #include "frontend/imgui_ctx.h"
+#include "common/logged_runtime_error.h"
 #include "imgui/imgui.h"
 #include "imgui/imgui_freetype.h"
 #include "imgui/imgui_impl_sdl.h"
@@ -21,7 +22,7 @@ void ImGuiCtx::InitContext()
     m_ctx = ImGui::CreateContext();
 
     if (!m_ctx)
-        throw std::runtime_error{"ImGuiCtx: Context initialization failed"};
+        throw LoggedRuntimeError{"M64p frontend", "ImGui context initialization failed"};
 
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable | ImGuiConfigFlags_DockingEnable;
@@ -35,10 +36,10 @@ void ImGuiCtx::DeinitContext()
 void ImGuiCtx::InitBackends(SDL::Window& window, SDL::GLContext& gl_context)
 {
     if (!ImGui_ImplSDL2_InitForOpenGL(window.Get(), gl_context.Get()))
-        throw std::runtime_error{"ImGuiCtx: SDL2 backend initialization failed"};
+        throw LoggedRuntimeError{"M64p frontend", "ImGui SDL2 backend initialization failed"};
 
     if (!ImGui_ImplOpenGL3_Init("#version 330"))
-        throw std::runtime_error{"ImGuiCtx: OpenGL3 backend initialization failed"};
+        throw LoggedRuntimeError{"M64p frontend", "ImGui OpenGL3 backend initialization failed"};
 }
 
 void ImGuiCtx::DeinitBackends()

@@ -3,6 +3,8 @@
 #include "addon/safe_call.h"
 #include "frontend/app.h"
 
+#include <fmt/format.h>
+
 using namespace Param;
 
 namespace Addon::M64P::Config {
@@ -48,12 +50,15 @@ Napi::Value OpenSection(const Napi::CallbackInfo& info)
 
 Napi::Value GetSharedDataFilePath(const Napi::CallbackInfo& info)
 {
-    auto path = GetCore().GetSharedDataFilePath(AsPath(info[0]).string()).string();
+    return SafeCall(info.Env(), [&info]() {
+        auto file = AsPath(info[0]).string();
+        auto path = GetCore().GetSharedDataFilePath(file).string();
 
-    if (path.empty())
-        throw Napi::Error::New(info.Env(), "file not found " + path);
+        if (path.empty())
+            throw std::runtime_error(fmt::format("Shared data file not found '{}'", file));
 
-    return FromStrUtf8(info.Env(), path);
+        return FromStrUtf8(info.Env(), path);
+    });
 }
 
 Napi::Value GetUserConfigPath(const Napi::CallbackInfo& info)

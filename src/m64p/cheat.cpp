@@ -28,7 +28,7 @@ BlockMap Load(const std::filesystem::path& path)
     std::ifstream ifs{path};
 
     if (!ifs)
-        throw std::runtime_error{fmt::format("failed to open cheat file {}", path.string())};
+        throw std::runtime_error{fmt::format("Failed to open file for reading '{}'", path.string())};
 
     std::string line;
     line.reserve(1000);
@@ -164,7 +164,7 @@ void Save(const std::filesystem::path& path, const BlockMap& blocks)
     std::ofstream ofs{path};
 
     if (!ofs)
-        throw std::runtime_error{fmt::format("failed to open cheat file {}", path.string())};
+        throw std::runtime_error{fmt::format("Failed to open file for writing {}", path.string())};
 
     for (auto& [_, game] : blocks) {
         ofs << fmt::format("crc {}\n", game.crc);

@@ -4,6 +4,7 @@
 #include "addon/sdl/window_ref.h"
 #include "addon/param.h"
 #include "addon/safe_call.h"
+#include "common/logger.h"
 #include "common/message_box.h"
 #include "frontend/cheat_conf/view.h"
 #include "frontend/input_conf/view.h"
@@ -13,6 +14,8 @@
 #include <array>
 #include <atomic>
 #include <unordered_map>
+
+#include <fmt/format.h>
 
 using namespace Param;
 
@@ -49,6 +52,12 @@ static std::unordered_map<std::string, CallbackIndex> s_cb_map{
     {"window-closing", CallbackIndex_WindowClosing}
 };
 
+static std::array<const char*, CallbackIndex_Count> s_cb_names{
+    "core-started", "core-stopped", "new-frame", "new-vi", "core-reset",
+    "core-event", "core-state-changed", "debug-init", "debug-update",
+    "create-resources", "vi-update", "window-closing"
+};
+
 struct FuncRef {
     Napi::FunctionReference ref;
     Napi::ThreadSafeFunction ts;
@@ -72,8 +81,18 @@ void Call(int index, const F& f)
     if (!cb_func || !cb_func->ref)
         return;
 
-    cb_func->ts.BlockingCall([f](Napi::Env env, Napi::Function callback) {
-        f(env, callback);
+    cb_func->ts.BlockingCall([index, f](Napi::Env env, Napi::Function callback) {
+        try {
+            f(env, callback);
+        }
+        catch (const std::exception& e) {
+            Logger::Log(LogCategory::Fatal, "M64p binding", fmt::format("Caught unhandled exception in callback '{}'. {}", s_cb_names[index], e.what()));
+            std::exit(EXIT_FAILURE);
+        }
+        catch (...) {
+            Logger::Log(LogCategory::Fatal, "M64p binding", fmt::format("Caught unhandled exception in callback '{}'", s_cb_names[index]));
+            std::exit(EXIT_FAILURE);
+        }
     });
 }
 
@@ -87,8 +106,19 @@ void CallLock(int index, const F& f)
 
     s_cb_lock = false;
 
-    cb_func->ts.BlockingCall([f](Napi::Env env, Napi::Function callback) {
-        f(env, callback);
+    cb_func->ts.BlockingCall([index, f](Napi::Env env, Napi::Function callback) {
+        try {
+            f(env, callback);
+        }
+        catch (const std::exception& e) {
+            Logger::Log(LogCategory::Fatal, "M64p binding", fmt::format("Caught unhandled exception in callback '{}'. {}", s_cb_names[index], e.what()));
+            std::exit(EXIT_FAILURE);
+        }
+        catch (...) {
+            Logger::Log(LogCategory::Fatal, "M64p binding", fmt::format("Caught unhandled exception in callback '{}'", s_cb_names[index]));
+            std::exit(EXIT_FAILURE);
+        }
+
         s_cb_lock = true;
     });
 
@@ -332,11 +362,16 @@ Napi::Value On(const Napi::CallbackInfo& info)
         auto func = info[1].As<Napi::Function>();
         auto& cb_func = s_cb_func[index];
 
-        cb_func = std::make_unique<FuncRef>();
+        if (cb_func) {
+            Logger::Log(LogCategory::Warn, "M64p binding", fmt::format("Overriding callback '{}'. `{}` -> `{}`", s_cb_names[index],
+                AsStrUtf8(cb_func->ref.Value().ToString()), AsStrUtf8(func.ToString())));
 
-        if (cb_func->ref)
             cb_func->ref.Unref();
+            cb_func->ts.Abort();
+            cb_func->ts.Unref(info.Env());
+        }
 
+        cb_func = std::make_unique<FuncRef>();
         cb_func->ref = Napi::Persistent(func);
         cb_func->ts = Napi::ThreadSafeFunction::New(info.Env(), cb_func->ref.Value(),
             std::string{"front_cb_" + name}, 0, 1);

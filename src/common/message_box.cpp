@@ -50,13 +50,13 @@ static std::wstring CStrToWStr(const std::string& str)
     int size = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, str.c_str(), static_cast<int>(str.size()), nullptr, 0);
 
     if (size == 0)
-        throw std::runtime_error{"failed to convert string to wide string"};
+        throw std::runtime_error{"Failed to convert string to wide string"};
 
     std::wstring wstr(size, '\0');
     size = MultiByteToWideChar(CP_UTF8, MB_PRECOMPOSED, str.c_str(), static_cast<int>(str.size()), wstr.data(), static_cast<int>(wstr.size()));
 
     if (size == 0)
-        throw std::runtime_error{"failed to convert string to wide string"};
+        throw std::runtime_error{"Failed to convert string to wide string"};
 
     return wstr;
 }
@@ -95,7 +95,7 @@ void MessageBoxShow(SDL_Window* parent, MessageBoxIcon icon, const std::string& 
     const std::string& inst, const std::string& content)
 {
     if (!gtk_init_check(0, nullptr))
-        throw std::runtime_error{"gtk not initialized"};
+        throw std::runtime_error{"Gtk not initialized"};
 
     GtkMessageType real_icon{};
 

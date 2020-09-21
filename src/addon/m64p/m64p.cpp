@@ -7,6 +7,7 @@
 #include "common/file_util.h"
 #include "frontend/app.h"
 
+#include <fmt/format.h>
 #include <SDL2/SDL_endian.h>
 
 using namespace Param;
@@ -81,12 +82,17 @@ Napi::Value GetROMSettingsFromCRCs(const Napi::CallbackInfo& info)
 Napi::Value OpenROMFromFile(const Napi::CallbackInfo& info)
 {
     return SafeCall(info.Env(), [&info]() {
-        auto v = FileUtil::ReadAllBytes(AsPath(info[0]));
+        try {
+            auto v = FileUtil::ReadAllBytes(AsPath(info[0]));
 
-        if (!info[1].IsUndefined())
-            v.resize(AsU32(info[1]));
+            if (!info[1].IsUndefined())
+                v.resize(AsU32(info[1]));
 
-        GetCore().OpenROM(v.data(), v.size());
+            GetCore().OpenROM(v.data(), v.size());
+        }
+        catch (const std::exception& e) {
+            throw std::runtime_error{fmt::format("Failed to open ROM from file. {}", e.what())};
+        }
 
         return info.Env().Undefined();
     });

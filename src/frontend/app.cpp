@@ -1,3 +1,4 @@
+#include "common/logged_runtime_error.h"
 #include "frontend/cheat_conf/view.h"
 #include "frontend/fonts/fonts.h"
 #include "frontend/gfx/texture.h"
@@ -57,7 +58,7 @@ void App::InitVideo(const StartInfo& info)
     m_video.gl_context = SDL::GLContext{m_video.window};
 
     if (glewInit() != GLEW_OK)
-        throw std::runtime_error{"failed to initialize GLEW"};
+        throw LoggedRuntimeError{"M64p frontend", "Failed to initialize GLEW"};
 
     m_video.imgui.Initialize(m_video.window, m_video.gl_context);
 
@@ -94,16 +95,16 @@ inline void DebugLog(void*, int level, const char* message)
 {
     switch (level) {
     case M64MSG_ERROR:
-        std::cerr << "[ERROR] " << message << std::endl;
+        Logger::Log(LogCategory::Error, "M64p", message);
         break;
     case M64MSG_WARNING:
-        std::clog << "[WARNING] " << message << std::endl;
+        Logger::Log(LogCategory::Warn, "M64p", message);
         break;
     case M64MSG_INFO:
-        std::clog << "[INFO] " << message << std::endl;
+        Logger::Log(LogCategory::Info, "M64p", message);
         break;
     case M64MSG_STATUS:
-        std::clog << "[STATUS] " << message << std::endl;
+        Logger::Log(LogCategory::Trace, "M64p", message);
         break;
     }
 }
@@ -234,10 +235,16 @@ void App::LoadCheats()
 
     try {
         m_cheats.map = M64P::Cheat::Load(m_emu.data_dir / "mupencheat.txt");
+    }
+    catch (const std::exception& e) {
+        Logger::Log(LogCategory::Warn, "M64p frontend", fmt::format("Cheats not loaded. {}", e.what()));
+    }
+
+    try {
         m_cheats.user_map = M64P::Cheat::Load(m_emu.data_dir / "mupencheat_user.txt");
     }
     catch (const std::exception& e) {
-        std::cerr << "failed to load cheats " << e.what() << std::endl;
+        Logger::Log(LogCategory::Warn, "M64p frontend", fmt::format("User cheats not loaded. {}", e.what()));
     }
 
     m_cheats.block = &m_cheats.map[k_NullCrc];
@@ -252,7 +259,7 @@ void App::SaveCheats()
         M64P::Cheat::Save(m_emu.data_dir / "mupencheat_user.txt", m_cheats.user_map);
     }
     catch (const std::exception& e) {
-        std::cerr << "failed to save cheats " << e.what() << std::endl;
+        Logger::Log(LogCategory::Error, "M64p frontend", fmt::format("User cheats not saved. {}", e.what()));
     }
 }
 
@@ -373,7 +380,12 @@ void App::Execute()
             m_video.gl_context.MakeCurrent(m_video.window);
         }
         catch (const std::exception& e) {
-            std::cerr << "Core execution error: " << e.what() << std::endl;
+            Logger::Log(LogCategory::Fatal, "M64p frontend", fmt::format("Caught unhandled exception during emulation. {}", e.what()));
+            std::exit(EXIT_FAILURE);
+        }
+        catch (...) {
+            Logger::Log(LogCategory::Fatal, "M64p frontend", "Caught unhandled exception during emulation");
+            std::exit(EXIT_FAILURE);
         }
     });
 }
@@ -647,7 +659,7 @@ void App::NewVIHandler()
             TakeScreenshot();
         }
         catch (const std::exception& e) {
-            std::cerr << "[ERROR] Failed to take screenshot: " << e.what() << std::endl;
+            Logger::Log(LogCategory::Error, "M64p frontend", fmt::format("Screenshot not taken. {}", e.what()));
         }
     }
 

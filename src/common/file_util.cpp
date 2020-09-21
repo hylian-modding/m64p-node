@@ -3,6 +3,8 @@
 #include <fstream>
 #include <stdexcept>
 
+#include <fmt/format.h>
+
 namespace FileUtil {
 
 std::vector<u8> ReadAllBytes(const std::filesystem::path& path)
@@ -10,7 +12,7 @@ std::vector<u8> ReadAllBytes(const std::filesystem::path& path)
     std::ifstream ifs{path, std::ios::binary | std::ios::ate};
 
     if (!ifs)
-        throw std::runtime_error{"failed to open file " + path.string()};
+        throw std::runtime_error{fmt::format("Failed to open file '{}'", path.string())};
 
     auto len = ifs.tellg();
     ifs.seekg(0);

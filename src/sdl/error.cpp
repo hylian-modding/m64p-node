@@ -6,11 +6,11 @@
 namespace SDL {
 
 Error::Error() :
-	std::runtime_error{std::string{"SDL2 error: "} + SDL_GetError()}
+	LoggedRuntimeError{"SDL2", SDL_GetError()}
 {}
 
 Error::Error(const char* function_name) :
-	std::runtime_error{fmt::format("SDL2 error: {}: {}", function_name, SDL_GetError())}
+	LoggedRuntimeError{"SDL2", fmt::format("{}: {}", function_name, SDL_GetError())}
 {}
 
 }

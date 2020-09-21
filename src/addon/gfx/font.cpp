@@ -5,6 +5,8 @@
 #include "addon/safe_call.h"
 #include "frontend/app.h"
 
+#include <fmt/format.h>
+
 using namespace Param;
 using namespace Addon::ImGui_::Param;
 
@@ -55,7 +57,13 @@ Napi::Value Font::LoadFromFile(const Napi::CallbackInfo& info)
 {
     return SafeCall(info.Env(), [this, &info]() {
         DestroyTextures();
-        m_font.LoadFromFile(AsPath(info[0]), AsS32(info[1]), AsS32(info[2]));
+
+        try {
+            m_font.LoadFromFile(AsPath(info[0]), AsS32(info[1]), AsS32(info[2]));
+        }
+        catch (const std::exception& e) {
+            throw std::runtime_error{fmt::format("Failed to load font from file. {}", e.what())};
+        }
 
         return info.Env().Undefined();
     });

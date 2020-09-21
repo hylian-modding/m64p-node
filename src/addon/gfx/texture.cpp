@@ -3,6 +3,8 @@
 #include "addon/safe_call.h"
 #include "frontend/app.h"
 
+#include <fmt/format.h>
+
 using namespace Param;
 
 namespace Addon::Gfx {
@@ -77,7 +79,13 @@ Napi::Value Texture::LoadFromFile(const Napi::CallbackInfo& info)
 {
     return SafeCall(info.Env(), [this, &info]()
     {
-        m_texture.LoadFromFile(AsPath(info[0]));
+        try {
+            m_texture.LoadFromFile(AsPath(info[0]));
+        }
+        catch (const std::exception& e) {
+            throw std::runtime_error{fmt::format("Failed to load texture from file. {}", e.what())};
+        }
+
         m_texture.SetFilter(static_cast<::Gfx::TextureFilter>(AsS32Or(info[1], static_cast<s32>(::Gfx::TextureFilter::Nearest))));
 
         return info.Env().Undefined();
