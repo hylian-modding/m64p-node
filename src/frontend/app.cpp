@@ -168,6 +168,10 @@ void App::InitEmu(const StartInfo& info)
     video_gen_conf.SetBool("VerticalSync", false);
     video_gen_conf.Save();
 
+    auto gliden64_conf = m_emu.core.ConfigOpenSection("Video-GLideN64");
+    gliden64_conf.SetBool("ThreadedVideo", false);
+    gliden64_conf.Save();
+
     GetPlugin(M64PLUGIN_GFX).Load(info.gfx_plugin);
     GetPlugin(M64PLUGIN_AUDIO).Load(info.audio_plugin);
     GetPlugin(M64PLUGIN_INPUT).Load(info.input_plugin);
