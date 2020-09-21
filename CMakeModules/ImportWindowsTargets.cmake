@@ -32,11 +32,6 @@ set(SDL2_IMAGE_LIBRARY "${LIB_DIR}/SDL2_image.lib")
 add_library(sdl2::sdl2-image UNKNOWN IMPORTED)
 set_target_properties(sdl2::sdl2-image PROPERTIES IMPORTED_LOCATION "${SDL2_IMAGE_LIBRARY}" INTERFACE_INCLUDE_DIRECTORIES "${INCLUDE_DIR}")
 
-set(SDL2_MIXER_LIBRARY "${LIB_DIR}/SDL2_mixer.lib")
-
-add_library(sdl2::sdl2-mixer UNKNOWN IMPORTED)
-set_target_properties(sdl2::sdl2-mixer PROPERTIES IMPORTED_LOCATION "${SDL2_MIXER_LIBRARY}" INTERFACE_INCLUDE_DIRECTORIES "${INCLUDE_DIR}")
-
 set(FREETYPE_LIBRARY "${LIB_DIR}/freetype${BUILD_SUFFIX}.lib")
 
 add_library(freetype::freetype UNKNOWN IMPORTED)

@@ -11,8 +11,6 @@
 #include "m64p/plugin.h"
 #include "sdl/gl_context.h"
 #include "sdl/img_init.h"
-#include "sdl/mix_device.h"
-#include "sdl/mix_init.h"
 #include "sdl/sdl_init.h"
 #include "sdl/ttf_init.h"
 #include "sdl/window.h"
@@ -122,7 +120,6 @@ private:
         SDL::SDLInit sdl;
         SDL::IMGInit img;
         SDL::TTFInit ttf;
-        SDL::MixInit mix;
     };
 
     struct Video {
@@ -171,7 +168,6 @@ private:
     };
 
     SdlInit m_sdl_init;
-    SDL::MixDevice m_mix_dev;
     Video m_video;
     Emu m_emu{};
     Input m_input;

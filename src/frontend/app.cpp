@@ -16,7 +16,6 @@
 #include <GL/glew.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
 
 namespace Frontend {
 
@@ -31,14 +30,10 @@ App::App()
     m_sdl_init.sdl.Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_HAPTIC);
     m_sdl_init.img.Init(IMG_INIT_PNG | IMG_INIT_JPG);
     m_sdl_init.ttf.Init();
-    m_sdl_init.mix.Init(MIX_INIT_OGG | MIX_INIT_MP3 | MIX_INIT_FLAC);
-    m_mix_dev.Open(48000, AUDIO_F32, 2, 1024);
 }
 
 App::~App()
 {
-    m_mix_dev.Close();
-    m_sdl_init.mix.Quit();
     m_sdl_init.ttf.Quit();
     m_sdl_init.img.Quit();
     m_sdl_init.sdl.Quit();
