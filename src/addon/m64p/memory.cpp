@@ -445,7 +445,10 @@ Napi::Value BitCountBuffer(const Napi::CallbackInfo& info)
     auto len = AsU32(info[2]);
     u32 count{};
 
-    for (u32 i = off; i < len; ++i)
+    if (len == 0)
+        len = buf.ByteLength() - off;
+
+    for (u32 i = off; i < off + len; ++i)
         count += static_cast<u32>(std::bitset<8>{AsU32(buf.Get(i))}.count());
 
     return FromU32(info.Env(), count);
