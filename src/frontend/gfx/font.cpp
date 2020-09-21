@@ -1,3 +1,4 @@
+#include "common/file_util.h"
 #include "frontend/gfx/font.h"
 #include "sdl/surface.h"
 
@@ -11,9 +12,10 @@ void Font::LoadFromFile(const std::filesystem::path& path, int ptsize, int outli
 {
     Clear();
 
-    m_fill_font = {path, ptsize};
-	m_outline_font = {path, ptsize};
-	m_outline_font.SetOutline(m_outline_thickness = outline);
+    auto font_data = FileUtil::ReadAllBytes(path);
+    m_fill_font = {font_data.data(), font_data.size(), ptsize};
+    m_outline_font = {font_data.data(), font_data.size(), ptsize};
+    m_outline_font.SetOutline(m_outline_thickness = outline);
     CacheGlyphRange(0x0020, 0x00ff);
 
     m_valid = true;
