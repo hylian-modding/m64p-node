@@ -185,7 +185,6 @@ private:
     ~App();
 
     void PrintOpenGLInfo();
-    void PrintGLContextInfo();
     void InitVideo(const StartInfo& info);
     void DeinitVideo();
     void InitFrameCapture();
