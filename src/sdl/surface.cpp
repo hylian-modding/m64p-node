@@ -2,6 +2,7 @@
 #include "sdl/font.h"
 #include "sdl/surface.h"
 
+#include <fmt/format.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
@@ -44,8 +45,15 @@ Surface::Surface(const Font& font, u16 ch, const SDL_Color& color) :
 {
     m_ptr.reset(TTF_RenderGlyph_Blended(font.Get(), ch, color));
 
-    if (!m_ptr)
-        throw Error{"TTF_RenderGlyph_Blended"};
+    if (!m_ptr) {
+        if (font.GlyphIsProvided(ch)) {
+            Logger::Log(LogCategory::Warn, "SDL2", fmt::format("TTF_RenderGlyph_Blended: {} (family='{}' ch=0x{:x})", SDL_GetError(), font.GetFamilyName(), ch));
+            *this = Surface{0, 0, 32, SDL_PIXELFORMAT_RGBA8888};
+        }
+        else {
+            throw Error{"TTF_RenderGlyph_Blended"};
+        }
+    }
 }
 
 Surface::Surface(void* pixels, int width, int height, int depth, int pitch, SDL_PixelFormatEnum format) :

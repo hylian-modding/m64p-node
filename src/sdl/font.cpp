@@ -55,4 +55,9 @@ int Font::GetLineSkip() const
     return TTF_FontLineSkip(Get());
 }
 
+std::string Font::GetFamilyName() const
+{
+    return TTF_FontFaceFamilyName(Get());
+}
+
 }

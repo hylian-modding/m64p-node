@@ -20,6 +20,7 @@ public:
     bool GlyphIsProvided(u16 ch) const;
     int GlyphGetAdvance(u16 ch) const;
     int GetLineSkip() const;
+    std::string GetFamilyName() const;
 
 private:
     std::unique_ptr<TTF_Font, void(*)(TTF_Font*)> m_ptr;
