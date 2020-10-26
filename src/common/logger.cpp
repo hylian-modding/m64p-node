@@ -21,11 +21,10 @@ static void InsertTime(std::ostream& os)
 }
 
 constexpr std::array<const char*, 6> k_LogCategoryStr{"TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
-
-#ifndef _WIN32
-
 constexpr std::array<const char*, 6> k_LogCategoryCol{"\x1B[34m", "\x1B[36m", "\x1B[32m", "\x1B[33m", "\x1b[1m\x1B[31m", "\x1B[35m"};
 const char* k_InitialCol = "\033[0m";
+
+#ifndef _WIN32
 
 void Logger::Log(LogCategory cat, const std::string& module, const std::string& str) {
     std::ostream* os = &std::cout;
@@ -73,11 +72,13 @@ void Logger::Log(LogCategory cat, const std::string& module, const std::string& 
     const WORD col = con_attr & ~0xf;
 
     SetConsoleTextAttribute(hConsoleOutput, col | k_LogCategoryCol32[static_cast<std::size_t>(cat)]);
+    *os << k_LogCategoryCol[static_cast<std::size_t>(cat)];
     *os << '[';
     InsertTime(*os);
     *os << "] [" << k_LogCategoryStr[static_cast<std::size_t>(cat)];
     *os << "] " << module << " - ";
     SetConsoleTextAttribute(hConsoleOutput, con_attr);
+    *os << k_InitialCol;
     *os << str << std::endl;
 };
 
