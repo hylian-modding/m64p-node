@@ -7,9 +7,17 @@ else()
 endif()
 
 if("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "x64")
+    if(NOT DEFINED ENV{vcpkg_x64})
+        message(FATAL_ERROR "env variable 'vcpkg_x64' not defined")
+    endif()
+
     set(INCLUDE_DIR "$ENV{vcpkg_x64}/include")
     set(LIB_DIR "$ENV{vcpkg_x64}/${BUILD_PATH}/lib")
 elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
+    if(NOT DEFINED ENV{vcpkg_x86})
+        message(FATAL_ERROR "env variable 'vcpkg_x86' not defined")
+    endif()
+
     set(INCLUDE_DIR "$ENV{vcpkg_x86}/include")
     set(LIB_DIR "$ENV{vcpkg_x86}/${BUILD_PATH}/lib")
 endif()

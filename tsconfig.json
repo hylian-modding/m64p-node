@@ -3,8 +3,8 @@
     "declaration": true,
     "target": "esnext",
     "module": "commonjs",
-    "rootDir": "./src",
-    "outDir": "./js",
+    "rootDir": "src/Ts",
+    "outDir": "bin",
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
@@ -13,6 +13,6 @@
     "node_modules"
   ],
   "include": [
-    "src/**/*"
+    "src/Ts/**/*"
   ]
 }

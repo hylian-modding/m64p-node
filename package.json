@@ -1,24 +1,25 @@
 {
-  "name": "ml64-emu-addon",
+  "name": "m64p-node",
   "version": "1.0.0",
-  "description": "Mupen64Plus frontend and multimedia library for ModLoader64",
+  "description": "Mupen64Plus frontend module for ModLoader64",
   "private": true,
   "scripts": {
     "clean": "cmake-js clean",
     "config-debug": "cmake-js configure -DCMAKE_BUILD_TYPE=Debug",
     "config": "cmake-js configure",
-    "build-debug": "cmake-js build -DCMAKE_BUILD_TYPE=Debug && node postbuild-scripts/copy_addon_debug.js",
-    "build": "cmake-js build && node postbuild-scripts/copy_addon.js",
-    "rebuild-debug": "cmake-js rebuild -DCMAKE_BUILD_TYPE=Debug && node postbuild-scripts/copy_addon_debug.js",
-    "rebuild": "cmake-js rebuild && node postbuild-scripts/copy_addon.js",
-    "compile-debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug && node postbuild-scripts/copy_addon_debug.js",
-    "compile": "cmake-js compile && node postbuild-scripts/copy_addon.js",
-    "test": "cd test_bin && node ../js/index.js"
+    "build-debug": "cmake-js build -DCMAKE_BUILD_TYPE=Debug",
+    "build": "cmake-js build",
+    "rebuild-debug": "cmake-js rebuild -DCMAKE_BUILD_TYPE=Debug",
+    "rebuild": "cmake-js rebuild",
+    "compile-debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug",
+    "compile": "cmake-js compile",
+    "start": "cd bin && node index.js",
+    "dist": "node dist.js"
   },
-  "author": "",
+  "author": "Sylvain",
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@types/node": "^14.6.2",
-    "node-addon-api": "^3.0.0"
+    "@types/node": "^14.14.20",
+    "node-addon-api": "^3.1.0"
   }
 }

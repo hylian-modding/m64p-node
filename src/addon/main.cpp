@@ -17,4 +17,4 @@ Napi::Object BuildModule(Napi::Env env, Napi::Object exports)
     return exports;
 }
 
-NODE_API_MODULE(NODE_GYP_MODULE_NAME, BuildModule)
+NODE_API_MODULE(NODE_GYP_M64P_NODE, BuildModule)
