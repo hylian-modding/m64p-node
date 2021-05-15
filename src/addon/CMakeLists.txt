@@ -9,7 +9,7 @@ set_target_properties(addon PROPERTIES
 
 if(UNIX)
     set_target_properties(addon PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR)/bin")
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 endif()
 
 target_link_libraries(addon
