@@ -2,6 +2,7 @@
 
 #include <napi.h>
 #include <SDL2/SDL_endian.h>
+#include <cmath>
 
 namespace Addon::Yaz0 {
 
