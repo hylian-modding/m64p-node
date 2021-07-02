@@ -39,3 +39,14 @@ cd m64p-node
 npm install
 npm run dist
 ```
+
+# macOS
+
+```
+brew install cmake nodejs npm typescript sdl2 sdl2_ttf sdl2_image freetype glew libsamplerate speex speexdsp libpng zlib
+npm install -g cmake-js
+git clone https://github.com/hylian-modding/m64p-node
+cd m64p-node
+npm install
+npm run dist
+```
