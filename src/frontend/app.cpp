@@ -477,7 +477,7 @@ void App::UpdateVideoOutputSize()
     if (m_emu.core.GetEmuState() != M64EMU_RUNNING)
         return;
 
-    auto ws = ImGui::GetMainViewport()->GetWorkSize();
+    auto ws = ImGui::GetMainViewport()->WorkSize;
     auto wsw = static_cast<int>(ws.x) / 4 * 4;
     auto wsh = static_cast<int>(ws.y);
     auto size = m_emu.core.GetVideoSize();
@@ -605,8 +605,8 @@ void App::BindingBeforeRender()
     ImGui::PushFont(m_fonts.base);
 
     ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
-    ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetWorkPos(), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImGui::GetMainViewport()->GetWorkSize());
+    ImGui::SetNextWindowPos(ImGui::GetMainViewport()->WorkPos, ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImGui::GetMainViewport()->WorkSize);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0.01f, 0.01f});
     ImGui::Begin("##main_overlay", nullptr,  ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground

@@ -22,10 +22,10 @@ struct ViewportRef : Napi::ObjectWrap<ViewportRef> {
 	void SetPos(const Napi::CallbackInfo& info, const Napi::Value& value);
 	Napi::Value GetSize(const Napi::CallbackInfo& info);
 	void SetSize(const Napi::CallbackInfo& info, const Napi::Value& value);
-	Napi::Value GetWorkOffsetMin(const Napi::CallbackInfo& info);
-	void SetWorkOffsetMin(const Napi::CallbackInfo& info, const Napi::Value& value);
-	Napi::Value GetWorkOffsetMax(const Napi::CallbackInfo& info);
-	void SetWorkOffsetMax(const Napi::CallbackInfo& info, const Napi::Value& value);
+	//Napi::Value GetWorkOffsetMin(const Napi::CallbackInfo& info);
+	//void SetWorkOffsetMin(const Napi::CallbackInfo& info, const Napi::Value& value);
+	//Napi::Value GetWorkOffsetMax(const Napi::CallbackInfo& info);
+	//void SetWorkOffsetMax(const Napi::CallbackInfo& info, const Napi::Value& value);
 	Napi::Value GetDPIScale(const Napi::CallbackInfo& info);
 	void SetDPIScale(const Napi::CallbackInfo& info, const Napi::Value& value);
 	Napi::Value GetParentViewportId(const Napi::CallbackInfo& info);

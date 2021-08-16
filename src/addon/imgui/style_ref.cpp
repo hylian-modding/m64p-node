@@ -336,14 +336,15 @@ void StyleRef::SetTabBorderSize(const Napi::CallbackInfo&, const Napi::Value& va
 	m_style->TabBorderSize = AsF32(value);
 }
 
+// These were changed and may have different behavior!
 Napi::Value StyleRef::GetTabMinWidthForUnselectedCloseButton(const Napi::CallbackInfo& info)
 {
-	return FromF32(info.Env(), m_style->TabMinWidthForUnselectedCloseButton);
+	return FromF32(info.Env(), m_style->TabMinWidthForCloseButton);
 }
 
 void StyleRef::SetTabMinWidthForUnselectedCloseButton(const Napi::CallbackInfo&, const Napi::Value& value)
 {
-	m_style->TabMinWidthForUnselectedCloseButton = AsF32(value);
+	m_style->TabMinWidthForCloseButton = AsF32(value);
 }
 
 Napi::Value StyleRef::GetColorButtonPosition(const Napi::CallbackInfo& info)
@@ -436,14 +437,15 @@ void StyleRef::SetCurveTessellationTol(const Napi::CallbackInfo&, const Napi::Va
 	m_style->CurveTessellationTol = AsF32(value);
 }
 
+// @CHANGE: Looks like ImGui changed the name of this!
 Napi::Value StyleRef::GetCircleSegmentMaxError(const Napi::CallbackInfo& info)
 {
-	return FromF32(info.Env(), m_style->CircleSegmentMaxError);
+	return FromF32(info.Env(), m_style->CircleTessellationMaxError);
 }
 
 void StyleRef::SetCircleSegmentMaxError(const Napi::CallbackInfo&, const Napi::Value& value)
 {
-	m_style->CircleSegmentMaxError = AsF32(value);
+	m_style->CircleTessellationMaxError = AsF32(value);
 }
 
 Napi::Value StyleRef::GetColor(const Napi::CallbackInfo& info)

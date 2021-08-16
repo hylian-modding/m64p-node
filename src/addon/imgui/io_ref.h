@@ -52,8 +52,8 @@ struct IORef : Napi::ObjectWrap<IORef> {
 
 	Napi::Value GetConfigDockingNoSplit(const Napi::CallbackInfo& info);
 	void SetConfigDockingNoSplit(const Napi::CallbackInfo& info, const Napi::Value& value);
-	Napi::Value GetConfigDockingWithShift(const Napi::CallbackInfo& info);
-	void SetConfigDockingWithShift(const Napi::CallbackInfo& info, const Napi::Value& value);
+	//Napi::Value GetConfigDockingWithShift(const Napi::CallbackInfo& info);
+	//void SetConfigDockingWithShift(const Napi::CallbackInfo& info, const Napi::Value& value);
 	Napi::Value GetConfigDockingAlwaysTabBar(const Napi::CallbackInfo& info);
 	void SetConfigDockingAlwaysTabBar(const Napi::CallbackInfo& info, const Napi::Value& value);
 	Napi::Value GetConfigDockingTransparentPayload(const Napi::CallbackInfo& info);
@@ -76,8 +76,8 @@ struct IORef : Napi::ObjectWrap<IORef> {
 	void SetConfigWindowsResizeFromEdges(const Napi::CallbackInfo& info, const Napi::Value& value);
 	Napi::Value GetConfigWindowsMoveFromTitleBarOnly(const Napi::CallbackInfo& info);
 	void SetConfigWindowsMoveFromTitleBarOnly(const Napi::CallbackInfo& info, const Napi::Value& value);
-	Napi::Value GetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& info);
-	void SetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& info, const Napi::Value& value);
+	//Napi::Value GetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& info);
+	//void SetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& info, const Napi::Value& value);
 
 	Napi::Value GetBackendPlatformName(const Napi::CallbackInfo& info);
 	Napi::Value GetBackendRendererName(const Napi::CallbackInfo& info);

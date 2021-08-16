@@ -40,7 +40,7 @@ Napi::Object IORef::Init(Napi::Env env, Napi::Object exports)
 		InstanceAccessor<&IORef::GetDisplayFramebufferScale, &IORef::SetDisplayFramebufferScale>("displayFramebufferScale"),
 
 		InstanceAccessor<&IORef::GetConfigDockingNoSplit, &IORef::SetConfigDockingNoSplit>("configDockingNoSplit"),
-		InstanceAccessor<&IORef::GetConfigDockingWithShift, &IORef::SetConfigDockingWithShift>("configDockingWithShift"),
+		//InstanceAccessor<&IORef::GetConfigDockingWithShift, &IORef::SetConfigDockingWithShift>("configDockingWithShift"),
 		InstanceAccessor<&IORef::GetConfigDockingAlwaysTabBar, &IORef::SetConfigDockingAlwaysTabBar>("configDockingAlwaysTabBar"),
 		InstanceAccessor<&IORef::GetConfigDockingTransparentPayload, &IORef::SetConfigDockingTransparentPayload>("configDockingTransparentPayload"),
 
@@ -53,7 +53,7 @@ Napi::Object IORef::Init(Napi::Env env, Napi::Object exports)
 		InstanceAccessor<&IORef::GetConfigInputTextCursorBlink, &IORef::SetConfigInputTextCursorBlink>("configInputTextCursorBlink"),
 		InstanceAccessor<&IORef::GetConfigWindowsResizeFromEdges, &IORef::SetConfigWindowsResizeFromEdges>("configWindowsResizeFromEdges"),
 		InstanceAccessor<&IORef::GetConfigWindowsMoveFromTitleBarOnly, &IORef::SetConfigWindowsMoveFromTitleBarOnly>("configWindowsMoveFromTitleBarOnly"),
-		InstanceAccessor<&IORef::GetConfigWindowsMemoryCompactTimer, &IORef::SetConfigWindowsMemoryCompactTimer>("configWindowsMemoryCompactTimer"),
+		//InstanceAccessor<&IORef::GetConfigWindowsMemoryCompactTimer, &IORef::SetConfigWindowsMemoryCompactTimer>("configWindowsMemoryCompactTimer"),
 
 		InstanceAccessor<&IORef::GetBackendPlatformName>("backendPlatformName"),
 		InstanceAccessor<&IORef::GetBackendRendererName>("backendRendererName"),
@@ -280,6 +280,8 @@ void IORef::SetConfigDockingNoSplit(const Napi::CallbackInfo&, const Napi::Value
 	m_io->ConfigDockingNoSplit = AsBool(value);
 }
 
+// CHANGE: Looks like ImGui removed this
+/*
 Napi::Value IORef::GetConfigDockingWithShift(const Napi::CallbackInfo& info)
 {
 	return FromBool(info.Env(), m_io->ConfigDockingWithShift);
@@ -288,7 +290,7 @@ Napi::Value IORef::GetConfigDockingWithShift(const Napi::CallbackInfo& info)
 void IORef::SetConfigDockingWithShift(const Napi::CallbackInfo&, const Napi::Value& value)
 {
 	m_io->ConfigDockingWithShift = AsBool(value);
-}
+}*/
 
 Napi::Value IORef::GetConfigDockingAlwaysTabBar(const Napi::CallbackInfo& info)
 {
@@ -390,7 +392,8 @@ void IORef::SetConfigWindowsMoveFromTitleBarOnly(const Napi::CallbackInfo&, cons
 	m_io->ConfigWindowsMoveFromTitleBarOnly = AsBool(value);
 }
 
-Napi::Value IORef::GetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& info)
+// CHANGE: Looks like ImGui removed this?
+/*Napi::Value IORef::GetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& info)
 {
 	return FromF32(info.Env(), m_io->ConfigWindowsMemoryCompactTimer);
 }
@@ -398,7 +401,7 @@ Napi::Value IORef::GetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo& 
 void IORef::SetConfigWindowsMemoryCompactTimer(const Napi::CallbackInfo&, const Napi::Value& value)
 {
 	m_io->ConfigWindowsMemoryCompactTimer = AsF32(value);
-}
+}*/
 
 Napi::Value IORef::GetBackendPlatformName(const Napi::CallbackInfo& info)
 {

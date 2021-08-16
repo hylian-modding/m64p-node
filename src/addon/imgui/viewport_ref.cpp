@@ -20,8 +20,8 @@ Napi::Object ViewportRef::Init(Napi::Env env, Napi::Object exports)
 		InstanceAccessor<&ViewportRef::GetFlags, &ViewportRef::SetFlags>("flags"),
 		InstanceAccessor<&ViewportRef::GetPos, &ViewportRef::SetPos>("pos"),
 		InstanceAccessor<&ViewportRef::GetSize, &ViewportRef::SetSize>("size"),
-		InstanceAccessor<&ViewportRef::GetWorkOffsetMin, &ViewportRef::SetWorkOffsetMin>("workOffsetMin"),
-		InstanceAccessor<&ViewportRef::GetWorkOffsetMax, &ViewportRef::SetWorkOffsetMax>("workOffsetMax"),
+		//InstanceAccessor<&ViewportRef::GetWorkOffsetMin, &ViewportRef::SetWorkOffsetMin>("workOffsetMin"),
+		//InstanceAccessor<&ViewportRef::GetWorkOffsetMax, &ViewportRef::SetWorkOffsetMax>("workOffsetMax"),
 		InstanceAccessor<&ViewportRef::GetDPIScale, &ViewportRef::SetDPIScale>("dpiScale"),
 		InstanceAccessor<&ViewportRef::GetParentViewportId>("parentViewportId"),
 		InstanceAccessor<&ViewportRef::GetPlatformHandle>("platformHandle"),
@@ -84,7 +84,8 @@ void ViewportRef::SetSize(const Napi::CallbackInfo&, const Napi::Value& value)
 	m_viewport->Size = AsVec2(value);
 }
 
-Napi::Value ViewportRef::GetWorkOffsetMin(const Napi::CallbackInfo& info)
+// CHANGE: ImGui seems to have removed these
+/*Napi::Value ViewportRef::GetWorkOffsetMin(const Napi::CallbackInfo& info)
 {
 	return FromVec2(info.Env(), m_viewport->WorkOffsetMin);
 }
@@ -102,7 +103,7 @@ Napi::Value ViewportRef::GetWorkOffsetMax(const Napi::CallbackInfo& info)
 void ViewportRef::SetWorkOffsetMax(const Napi::CallbackInfo&, const Napi::Value& value)
 {
 	m_viewport->WorkOffsetMax = AsVec2(value);
-}
+}*/
 
 Napi::Value ViewportRef::GetDPIScale(const Napi::CallbackInfo& info)
 {
@@ -134,12 +135,12 @@ Napi::Value ViewportRef::GetCenter(const Napi::CallbackInfo& info)
 
 Napi::Value ViewportRef::GetWorkPos(const Napi::CallbackInfo& info)
 {
-	return FromVec2(info.Env(), m_viewport->GetWorkPos());
+	return FromVec2(info.Env(), m_viewport->WorkPos);
 }
 
 Napi::Value ViewportRef::GetWorkSize(const Napi::CallbackInfo& info)
 {
-	return FromVec2(info.Env(), m_viewport->GetWorkSize());
+	return FromVec2(info.Env(), m_viewport->WorkSize);
 }
 
 }

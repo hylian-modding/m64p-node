@@ -1814,11 +1814,12 @@ Napi::Value OpenPopup(const Napi::CallbackInfo& info)
     return info.Env().Undefined();
 }
 
+// CHANGE: OpenPopupContextItem is now void
 Napi::Value OpenPopupContextItem(const Napi::CallbackInfo& info)
 {
     LoadStrUtf8Or(0, info[0], "");
-
-    return FromBool(info.Env(), ImGui::OpenPopupContextItem(GetStrUtf8(0)[0] == '\0' ? nullptr : GetStrUtf8(0), AsS32Or(info[1], 1)));
+    ImGui::OpenPopupContextItem(GetStrUtf8(0)[0] == '\0' ? nullptr : GetStrUtf8(0), AsS32Or(info[1], 1));
+    return FromBool(info.Env(), true);
 }
 
 Napi::Value CloseCurrentPopup(const Napi::CallbackInfo& info)
@@ -2169,13 +2170,13 @@ Napi::Value GetBackgroundDrawList(const Napi::CallbackInfo& info)
 {
     if (info.Length() == 0) {
         return DrawListRef::Create(info.Env(), ImGui::GetBackgroundDrawList(),
-            ImGui::GetWindowViewport()->GetWorkPos());
+            ImGui::GetWindowViewport()->WorkPos);
     }
     else if (info.Length() == 1) {
         auto viewport = AsViewportPtr(info[0]);
 
         return DrawListRef::Create(info.Env(), ImGui::GetBackgroundDrawList(viewport),
-            viewport->GetWorkPos());
+            viewport->WorkPos);
     }
 
     return info.Env().Undefined();
@@ -2185,13 +2186,13 @@ Napi::Value GetForegroundDrawList(const Napi::CallbackInfo& info)
 {
     if (info.Length() == 0) {
         return DrawListRef::Create(info.Env(), ImGui::GetForegroundDrawList(),
-            ImGui::GetWindowViewport()->GetWorkPos());
+            ImGui::GetWindowViewport()->WorkPos);
     }
     else if (info.Length() == 1) {
         auto viewport = AsViewportPtr(info[0]);
 
         return DrawListRef::Create(info.Env(), ImGui::GetForegroundDrawList(viewport),
-            viewport->GetWorkPos());
+            viewport->WorkPos);
     }
 
     return info.Env().Undefined();
