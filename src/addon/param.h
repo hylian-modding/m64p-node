@@ -39,9 +39,37 @@ inline Napi::Value FromS32(Napi::Env env, s32 value)
     return Napi::Number::New(env, value);
 }
 
+inline Napi::Value FromS64(Napi::Env env, s64 value)
+{
+    return Napi::Number::New(env, value);
+}
+
+inline Napi::Value FromBigS64(Napi::Env env, s64 value)
+{
+    return Napi::BigInt::New(env, value);
+}
+
 inline u32 AsU32(const Napi::Value& value)
 {
     return value.As<Napi::Number>().Uint32Value();
+}
+
+inline u64 AsU64(const Napi::Value& value)
+{
+    s64 i64value = value.As<Napi::Number>().Int64Value();
+    return *(u64*)(&i64value);
+}
+
+inline u64 AsBigU64(const Napi::Value& value)
+{
+    bool lossless = true;
+    u64 i64value = value.As<Napi::BigInt>().Uint64Value(&lossless);
+
+    if (lossless == false) {
+        printf("AsBigU64: Value was not converted losslessly!\n");
+    }
+
+    return i64value;
 }
 
 inline Napi::Value FromU32(Napi::Env env, u32 value)
@@ -49,9 +77,31 @@ inline Napi::Value FromU32(Napi::Env env, u32 value)
     return Napi::Number::New(env, value);
 }
 
+inline Napi::Value FromU64(Napi::Env env, u64 value)
+{
+    return Napi::Number::New(env, value);
+}
+
+inline Napi::Value FromBigU64(Napi::Env env, u64 value)
+{
+    return Napi::BigInt::New(env, value);
+}
+
 inline s64 AsS64(const Napi::Value& value)
 {
     return value.As<Napi::Number>().Int64Value();
+}
+
+inline s64 AsBigS64(const Napi::Value& value)
+{
+    bool lossless = true;
+    s64 i64value = value.As<Napi::BigInt>().Int64Value(&lossless);
+
+    if (lossless == false) {
+        printf("AsBigS64: Value was not converted losslessly!\n");
+    }
+
+    return i64value;
 }
 
 inline f32 AsF32(const Napi::Value& value)

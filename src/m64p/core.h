@@ -199,10 +199,12 @@ public:
     u8 RDRAMRead8(u32 addr);
     u16 RDRAMRead16(u32 addr);
     u32 RDRAMRead32(u32 addr);
+    u64 RDRAMRead64(u32 addr);
     u8* RDRAMReadBuffer(u32 addr, std::size_t len);
     void RDRAMWrite8(u32 addr, u8 val);
     void RDRAMWrite16(u32 addr, u16 val);
     void RDRAMWrite32(u32 addr, u32 val);
+    void RDRAMWrite64(u32 addr, u64 val);
     void RDRAMWriteBuffer(u32 addr, u8* buf, std::size_t len);
     u8 ROMRead8(u32 addr);
     u16 ROMRead16(u32 addr);

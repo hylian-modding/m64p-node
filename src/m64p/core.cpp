@@ -107,10 +107,12 @@ public:
     ptr_ExtRDRAMRead8 ExtRDRAMRead8;
     ptr_ExtRDRAMRead16 ExtRDRAMRead16;
     ptr_ExtRDRAMRead32 ExtRDRAMRead32;
+    ptr_ExtRDRAMRead64 ExtRDRAMRead64;
     ptr_ExtRDRAMReadBuffer ExtRDRAMReadBuffer;
     ptr_ExtRDRAMWrite8 ExtRDRAMWrite8;
     ptr_ExtRDRAMWrite16 ExtRDRAMWrite16;
     ptr_ExtRDRAMWrite32 ExtRDRAMWrite32;
+    ptr_ExtRDRAMWrite64 ExtRDRAMWrite64;
     ptr_ExtRDRAMWriteBuffer ExtRDRAMWriteBuffer;
     ptr_ExtROMRead8 ExtROMRead8;
     ptr_ExtROMRead16 ExtROMRead16;
@@ -209,10 +211,12 @@ public:
         LOADFUNC(ExtRDRAMRead8);
         LOADFUNC(ExtRDRAMRead16);
         LOADFUNC(ExtRDRAMRead32);
+        LOADFUNC(ExtRDRAMRead64);
         LOADFUNC(ExtRDRAMReadBuffer);
         LOADFUNC(ExtRDRAMWrite8);
         LOADFUNC(ExtRDRAMWrite16);
         LOADFUNC(ExtRDRAMWrite32);
+        LOADFUNC(ExtRDRAMWrite64);
         LOADFUNC(ExtRDRAMWriteBuffer);
         LOADFUNC(ExtROMRead8);
         LOADFUNC(ExtROMRead16);
@@ -1091,6 +1095,11 @@ u32 Core::RDRAMRead32(u32 addr)
     return m_ld->ExtRDRAMRead32(addr);
 }
 
+u64 Core::RDRAMRead64(u32 addr)
+{
+    return m_ld->ExtRDRAMRead64(addr);
+}
+
 u8* Core::RDRAMReadBuffer(u32 addr, std::size_t len)
 {
     return m_ld->ExtRDRAMReadBuffer(addr, len);
@@ -1109,6 +1118,11 @@ void Core::RDRAMWrite16(u32 addr, u16 val)
 void Core::RDRAMWrite32(u32 addr, u32 val)
 {
     m_ld->ExtRDRAMWrite32(addr, val);
+}
+
+void Core::RDRAMWrite64(u32 addr, u64 val)
+{
+    m_ld->ExtRDRAMWrite64(addr, val);
 }
 
 void Core::RDRAMWriteBuffer(u32 addr, u8* buf, std::size_t len)

@@ -19,10 +19,24 @@ inline u32 PackF32(f32 v)
     return m;
 }
 
+inline u64 PackF64(f64 v)
+{
+    u64 m;
+    std::memcpy(&m, &v, 8);
+    return m;
+}
+
 inline f32 UnpackF32(u32 v)
 {
     f32 m;
     std::memcpy(&m, &v, 4);
+    return m;
+}
+
+inline f64 UnpackF64(u64 v)
+{
+    f64 m;
+    std::memcpy(&m, &v, 8);
     return m;
 }
 
@@ -47,45 +61,93 @@ Napi::Value InvalidateCachedCode(const Napi::CallbackInfo& info)
 
 Napi::Value RDRAMRead8(const Napi::CallbackInfo& info)
 {
-    return FromU32(info.Env(), GetCore().RDRAMRead8(AsU32(info[0])));
+    return FromU32(info.Env(), GetCore().RDRAMRead8(AsU32(info[0]) & 0x0FFFFFFF));
 }
 
 Napi::Value RDRAMRead16(const Napi::CallbackInfo& info)
 {
-    return FromU32(info.Env(), GetCore().RDRAMRead16(AsU32(info[0])));
+    return FromU32(info.Env(), GetCore().RDRAMRead16(AsU32(info[0]) & 0x0FFFFFFF));
 }
 
 Napi::Value RDRAMRead32(const Napi::CallbackInfo& info)
 {
-    return FromU32(info.Env(), GetCore().RDRAMRead32(AsU32(info[0])));
+    return FromU32(info.Env(), GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF));
+}
+
+Napi::Value RDRAMRead64(const Napi::CallbackInfo& info)
+{
+    u64 hi = GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF);
+    u64 lo = GetCore().RDRAMRead32((AsU32(info[0]) + 4) & 0x0FFFFFFF);
+    u64 v = (hi << 32) | (lo & 0x00000000FFFFFFFF);
+    if (v > 9007199254740991) {
+        printf("RDRAMRead64: Value is > 2^53! It will be truncated when it reaches you!\n");
+    }
+    return FromU64(info.Env(), v);
+}
+
+Napi::Value RDRAMReadBigInt64(const Napi::CallbackInfo& info)
+{
+    u64 hi = GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF);
+    u64 lo = GetCore().RDRAMRead32((AsU32(info[0]) + 4) & 0x0FFFFFFF);
+    u64 v = (hi << 32) | (lo & 0x00000000FFFFFFFF);
+    return FromBigU64(info.Env(), v);
 }
 
 Napi::Value RDRAMReadS8(const Napi::CallbackInfo& info)
 {
-    return FromS32(info.Env(), static_cast<s8>(GetCore().RDRAMRead8(AsU32(info[0]))));
+    return FromS32(info.Env(), static_cast<s8>(GetCore().RDRAMRead8(AsU32(info[0]) & 0x0FFFFFFF)));
 }
 
 Napi::Value RDRAMReadS16(const Napi::CallbackInfo& info)
 {
-    return FromS32(info.Env(), static_cast<s16>(GetCore().RDRAMRead16(AsU32(info[0]))));
+    return FromS32(info.Env(), static_cast<s16>(GetCore().RDRAMRead16(AsU32(info[0]) & 0x0FFFFFFF)));
 }
 
 Napi::Value RDRAMReadS32(const Napi::CallbackInfo& info)
 {
-    return FromS32(info.Env(), static_cast<s32>(GetCore().RDRAMRead32(AsU32(info[0]))));
+    return FromS32(info.Env(), static_cast<s32>(GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF)));
 }
+
+Napi::Value RDRAMReadS64(const Napi::CallbackInfo& info)
+{
+    u64 hi = GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF);
+    u64 lo = GetCore().RDRAMRead32((AsU32(info[0]) + 4) & 0x0FFFFFFF);
+    s64 v = (hi << 32) | (lo & 0x00000000FFFFFFFF);
+    if (v > 9007199254740991) {
+        printf("RDRAMReadS64: Value is > 2^53! It will be truncated when it reaches you!\n");
+    }
+    return FromS64(info.Env(), v);
+}
+
+Napi::Value RDRAMReadBigIntS64(const Napi::CallbackInfo& info)
+{
+    u64 hi = GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF);
+    u64 lo = GetCore().RDRAMRead32((AsU32(info[0]) + 4) & 0x0FFFFFFF);
+    u64 v = (hi << 32) | (lo & 0x00000000FFFFFFFF);
+    return FromBigS64(info.Env(), v);
+}
+
 
 Napi::Value RDRAMReadF32(const Napi::CallbackInfo& info)
 {
-    auto v = GetCore().RDRAMRead32(AsU32(info[0]));
+    auto v = GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF);
 
     return FromF32(info.Env(), UnpackF32(v));
+}
+
+Napi::Value RDRAMReadF64(const Napi::CallbackInfo& info)
+{
+    u64 hi = GetCore().RDRAMRead32(AsU32(info[0]) & 0x0FFFFFFF);
+    u64 lo = GetCore().RDRAMRead32((AsU32(info[0]) + 4) & 0x0FFFFFFF);
+    u64 v = (hi << 32) | (lo & 0x00000000FFFFFFFF);
+
+    return FromF64(info.Env(), UnpackF64(v));
 }
 
 Napi::Value RDRAMReadBuffer(const Napi::CallbackInfo& info)
 {
     auto len = AsU32(info[1]);
-    auto buf = GetCore().RDRAMReadBuffer(AsU32(info[0]), len);
+    auto buf = GetCore().RDRAMReadBuffer(AsU32(info[0]) & 0x0FFFFFFF, len);
     auto ret = Napi::Buffer<u8>::Copy(info.Env(), buf, len);
     std::free(buf);
 
@@ -94,21 +156,43 @@ Napi::Value RDRAMReadBuffer(const Napi::CallbackInfo& info)
 
 Napi::Value RDRAMWrite8(const Napi::CallbackInfo& info)
 {
-    GetCore().RDRAMWrite8(AsU32(info[0]), AsU32(info[1]));
+    GetCore().RDRAMWrite8(AsU32(info[0]) & 0x0FFFFFFF, AsU32(info[1]));
 
     return info.Env().Undefined();
 }
 
 Napi::Value RDRAMWrite16(const Napi::CallbackInfo& info)
 {
-    GetCore().RDRAMWrite16(AsU32(info[0]), AsU32(info[1]));
+    GetCore().RDRAMWrite16(AsU32(info[0]) & 0x0FFFFFFF, AsU32(info[1]));
 
     return info.Env().Undefined();
 }
 
 Napi::Value RDRAMWrite32(const Napi::CallbackInfo& info)
 {
-    GetCore().RDRAMWrite32(AsU32(info[0]), AsU32(info[1]));
+    GetCore().RDRAMWrite32(AsU32(info[0]) & 0x0FFFFFFF, AsU32(info[1]));
+
+    return info.Env().Undefined();
+}
+
+Napi::Value RDRAMWrite64(const Napi::CallbackInfo& info)
+{
+    u32 hi = info[1].As<Napi::Number>().Int64Value() >> 32;
+    u32 lo = info[1].As<Napi::Number>().Int64Value() & 0x00000000FFFFFFFF;
+
+    if (info[1].As<Napi::Number>().Int64Value() > 9007199254740991) {
+        printf("RDRAMWrite64: Value is > 2^53! It will be -1 when it is written!\n");
+    }
+
+    GetCore().RDRAMWrite32(AsU32(info[0]) & 0x0FFFFFFF, hi);
+    GetCore().RDRAMWrite32((AsU32(info[0]) + 4) & 0x0FFFFFFF, lo);
+
+    return info.Env().Undefined();
+}
+
+Napi::Value RDRAMWriteBigInt64(const Napi::CallbackInfo& info)
+{
+    GetCore().RDRAMWrite64(AsU32(info[0]) & 0x0FFFFFFF, AsBigU64(info[1]));
 
     return info.Env().Undefined();
 }
@@ -116,7 +200,19 @@ Napi::Value RDRAMWrite32(const Napi::CallbackInfo& info)
 Napi::Value RDRAMWriteF32(const Napi::CallbackInfo& info)
 {
     auto v = AsF32(info[1]);
-    GetCore().RDRAMWrite32(AsU32(info[0]), PackF32(v));
+    GetCore().RDRAMWrite32(AsU32(info[0]) & 0x0FFFFFFF, PackF32(v));
+
+    return info.Env().Undefined();
+}
+
+Napi::Value RDRAMWriteF64(const Napi::CallbackInfo& info)
+{
+    auto v = AsF64(info[1]);
+    u64 p = PackF64(v);
+    u32 hi = p >> 32;
+    u32 lo = p & 0x00000000FFFFFFFF;
+    GetCore().RDRAMWrite32(AsU32(info[0]) & 0x0FFFFFFF, hi);
+    GetCore().RDRAMWrite32((AsU32(info[0]) + 4) & 0x0FFFFFFF, lo);
 
     return info.Env().Undefined();
 }
@@ -124,7 +220,7 @@ Napi::Value RDRAMWriteF32(const Napi::CallbackInfo& info)
 Napi::Value RDRAMWriteBuffer(const Napi::CallbackInfo& info)
 {
     auto buf = info[1].As<Napi::Uint8Array>();
-    GetCore().RDRAMWriteBuffer(AsU32(info[0]), buf.Data(), buf.ByteLength());
+    GetCore().RDRAMWriteBuffer(AsU32(info[0]) & 0x0FFFFFFF, buf.Data(), buf.ByteLength());
 
     return info.Env().Undefined();
 }
@@ -463,15 +559,23 @@ Napi::Object BuildExports(Napi::Env env, Napi::Object exports)
     exports.Set("rdramRead8", Napi::Function::New(env, RDRAMRead8));
     exports.Set("rdramRead16", Napi::Function::New(env, RDRAMRead16));
     exports.Set("rdramRead32", Napi::Function::New(env, RDRAMRead32));
+    exports.Set("rdramRead64", Napi::Function::New(env, RDRAMRead64));
+    exports.Set("rdramReadBigInt64", Napi::Function::New(env, RDRAMReadBigInt64));
     exports.Set("rdramReadS8", Napi::Function::New(env, RDRAMReadS8));
     exports.Set("rdramReadS16", Napi::Function::New(env, RDRAMReadS16));
     exports.Set("rdramReadS32", Napi::Function::New(env, RDRAMReadS32));
+    exports.Set("rdramReadS64", Napi::Function::New(env, RDRAMReadS64));
+    exports.Set("rdramReadBigIntS64", Napi::Function::New(env, RDRAMReadBigIntS64));
     exports.Set("rdramReadF32", Napi::Function::New(env, RDRAMReadF32));
+    exports.Set("rdramReadF32", Napi::Function::New(env, RDRAMReadF64));
     exports.Set("rdramReadBuffer", Napi::Function::New(env, RDRAMReadBuffer));
     exports.Set("rdramWrite8", Napi::Function::New(env, RDRAMWrite8));
     exports.Set("rdramWrite16", Napi::Function::New(env, RDRAMWrite16));
     exports.Set("rdramWrite32", Napi::Function::New(env, RDRAMWrite32));
+    exports.Set("rdramWrite64", Napi::Function::New(env, RDRAMWrite64));
+    exports.Set("rdramWriteBigInt64", Napi::Function::New(env, RDRAMWriteBigInt64));
     exports.Set("rdramWriteF32", Napi::Function::New(env, RDRAMWriteF32));
+    exports.Set("rdramWriteF64", Napi::Function::New(env, RDRAMWriteF64));
     exports.Set("rdramWriteBuffer", Napi::Function::New(env, RDRAMWriteBuffer));
     exports.Set("romRead8", Napi::Function::New(env, ROMRead8));
     exports.Set("romRead16", Napi::Function::New(env, ROMRead16));

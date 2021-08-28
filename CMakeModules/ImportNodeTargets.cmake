@@ -5,7 +5,7 @@ string(REPLACE "\n" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 string(REPLACE "\"" "" NODE_ADDON_API_DIR ${NODE_ADDON_API_DIR})
 
 add_library(node::node-addon-api INTERFACE IMPORTED)
-set_target_properties(node::node-addon-api PROPERTIES INTERFACE_COMPILE_DEFINITIONS "NAPI_VERSION=5"
+set_target_properties(node::node-addon-api PROPERTIES INTERFACE_COMPILE_DEFINITIONS "NAPI_VERSION=6"
     INTERFACE_INCLUDE_DIRECTORIES "${NODE_ADDON_API_DIR}")
 
 if(WIN32)
