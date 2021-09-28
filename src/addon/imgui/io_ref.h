@@ -96,6 +96,7 @@ struct IORef : Napi::ObjectWrap<IORef> {
 	Napi::Value GetMetricsActiveWindows(const Napi::CallbackInfo& info);
 	Napi::Value GetMetricsActiveAllocations(const Napi::CallbackInfo& info);
 	Napi::Value GetMouseDelta(const Napi::CallbackInfo& info);
+	Napi::Value GetMouseWheel(const Napi::CallbackInfo& info);
 };
 
 }

@@ -71,7 +71,8 @@ Napi::Object IORef::Init(Napi::Env env, Napi::Object exports)
 		InstanceAccessor<&IORef::GetMetricsRenderWindows>("metricsRenderWindows"),
 		InstanceAccessor<&IORef::GetMetricsActiveWindows>("metricsActiveWindows"),
 		InstanceAccessor<&IORef::GetMetricsActiveAllocations>("metricsActiveAllocations"),
-		InstanceAccessor<&IORef::GetMouseDelta>("mouseDelta")
+		InstanceAccessor<&IORef::GetMouseDelta>("mouseDelta"),
+		InstanceAccessor<&IORef::GetMouseWheel>("mouseWheel")
     });
 
     constructor = Napi::Persistent(func);
@@ -483,6 +484,14 @@ Napi::Value IORef::GetMetricsActiveAllocations(const Napi::CallbackInfo& info)
 Napi::Value IORef::GetMouseDelta(const Napi::CallbackInfo& info)
 {
 	return FromVec2(info.Env(), m_io->MouseDelta);
+}
+
+Napi::Value IORef::GetMouseWheel(const Napi::CallbackInfo& info)
+{
+	ImVec2 xy;
+	xy.x = m_io->MouseWheelH;
+	xy.y = m_io->MouseWheel;
+	return FromVec2(info.Env(), xy);
 }
 
 }

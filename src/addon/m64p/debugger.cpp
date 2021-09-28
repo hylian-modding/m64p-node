@@ -200,7 +200,7 @@ Napi::Value GetPrevPC(const Napi::CallbackInfo& info)
 
 Napi::Value ReadPC(const Napi::CallbackInfo& info)
 {
-    return FromS32(info.Env(), *GetCore().DebugGetPCPtr());
+    return FromU32(info.Env(), *GetCore().DebugGetPCPtr());
 }
 
 Napi::Value WritePC(const Napi::CallbackInfo& info)

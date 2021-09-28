@@ -11,6 +11,10 @@
 #include <m64p_api/m64p_frontend.h>
 #include <m64p_api/m64p_vidext.h>
 
+// TODO: move to relevant file
+typedef void (*ptr_VidExt_AddHiresTexturePath)(const char* path);
+typedef void (*ptr_VidExt_RemoveHiresTexturePath)(const char* path);
+
 #define LOADFUNC(func) func = m_so.LoadFunction<ptr_##func>(#func)
 
 namespace M64P {
@@ -123,6 +127,9 @@ public:
     ptr_ExtROMWrite32 ExtROMWrite32;
     ptr_ExtROMWriteBuffer ExtROMWriteBuffer;
 
+    ptr_VidExt_AddHiresTexturePath VidExt_AddHiresTexturePath;
+	ptr_VidExt_RemoveHiresTexturePath VidExt_RemoveHiresTexturePath;
+
     void Load(const std::filesystem::path& path)
     {
         m_so = SDL::SharedObject{path};
@@ -226,6 +233,9 @@ public:
         LOADFUNC(ExtROMWrite16);
         LOADFUNC(ExtROMWrite32);
         LOADFUNC(ExtROMWriteBuffer);
+
+        LOADFUNC(VidExt_AddHiresTexturePath);
+        LOADFUNC(VidExt_RemoveHiresTexturePath);
     }
 
     void Unload()
@@ -1168,6 +1178,16 @@ void Core::ROMWrite32(u32 addr, u32 val)
 void Core::ROMWriteBuffer(u32 addr, u8* buf, std::size_t len)
 {
     m_ld->ExtROMWriteBuffer(addr, buf, len);
+}
+
+void Core::AddHiresTexturePath(const char* _path)
+{
+    m_ld->VidExt_AddHiresTexturePath(_path);
+}
+
+void Core::RemoveHiresTexturePath(const char* _path)
+{
+    m_ld->VidExt_RemoveHiresTexturePath(_path);
 }
 
 }

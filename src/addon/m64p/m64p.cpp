@@ -410,6 +410,16 @@ Napi::Value GetNumElapsedFrames(const Napi::CallbackInfo& info)
     return FromF64(info.Env(), static_cast<f64>(GetApp().GetElapsedFrameCount()));
 }
 
+Napi::Value AddHiresTexturePath(const Napi::CallbackInfo& info) {
+    GetCore().AddHiresTexturePath(AsStrUtf8(info[0]).c_str());
+    return info.Env().Undefined();
+}
+
+Napi::Value RemoveHiresTexturePath(const Napi::CallbackInfo& info) {
+    GetCore().RemoveHiresTexturePath(AsStrUtf8(info[0]).c_str());
+    return info.Env().Undefined();
+}
+
 Napi::Object BuildExports(Napi::Env env, Napi::Object exports)
 {
     exports.Set("Config", Config::BuildExports(env, Napi::Object::New(env)));
@@ -455,6 +465,8 @@ Napi::Object BuildExports(Napi::Env env, Napi::Object exports)
 
     exports.Set("hasInputFocus", Napi::Function::New(env, HasInputFocus));
     exports.Set("getNumElapsedFrames", Napi::Function::New(env, GetNumElapsedFrames));
+    exports.Set("AddHiresTexturePath", Napi::Function::New(env, AddHiresTexturePath));
+    exports.Set("RemoveHiresTexturePath", Napi::Function::New(env, RemoveHiresTexturePath));
 
     return exports;
 }

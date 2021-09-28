@@ -215,6 +215,9 @@ public:
     void ROMWrite32(u32 addr, u32 val);
     void ROMWriteBuffer(u32 addr, u8* buf, std::size_t len);
 
+    void AddHiresTexturePath(const char* _path);
+    void RemoveHiresTexturePath(const char* _path);
+
 private:
     class Loader;
 
